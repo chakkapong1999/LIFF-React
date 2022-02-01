@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 // import initialLIFF from "../services/InitLineLiff";
 import liff from "@line/liff";
+import { Button, Card } from "react-bootstrap";
 const LIFF_ID = "1656852806-GeOAABVl";
 
 class Profile extends Component {
@@ -11,6 +12,7 @@ class Profile extends Component {
       name: "",
       status: "",
       pictureUrl: "",
+      result: "",
     };
   }
 
@@ -34,12 +36,34 @@ class Profile extends Component {
       });
   }
 
+  scanQr = () => {
+    liff.scanCodeV2().then((value) => {
+      this.setState({ result: value.value });
+      console.log(this.state.result);
+    });
+  };
+
   render() {
     return (
-      <div>
-        <h1> {this.state.name} </h1>
-        <p> {this.state.status} </p>
-        <img src={this.state.pictureUrl} alt="Profile" />
+      <div
+        class="w-50 p-3 mx-auto mt-5 border border-dark rounded"
+        align="center"
+      >
+        <Card style={{ width: "20rem" }}>
+          <Card.Img variant="top" src={this.state.pictureUrl} />
+          <Card.Body>
+            <Card.Title>{this.state.name}</Card.Title>
+            <Card.Text>{this.state.status}</Card.Text>
+          </Card.Body>
+        </Card>
+        <div class="mt-3">
+          <Button variant="primary" onClick={this.scanQr}>
+            SCAN QR
+          </Button>{" "}
+        </div>
+        <div class="mt-3">
+          <a href={this.state.result} target="_blank">{this.state.result}</a>
+        </div>
       </div>
     );
   }
