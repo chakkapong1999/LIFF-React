@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
 import liff from "@line/liff";
 import { Button, Card } from "react-bootstrap";
+import {
+  setUserId,
+  setDisplayName,
+  setStatusMessage,
+  setPictureUrl,
+} from "../stores/lineProfile";
+import { useDispatch, useSelector } from "react-redux";
 const LIFF_ID = "1656852806-GeOAABVl";
 
 function Profile() {
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState("");
-  const [pictureUrl, setPictureUrl] = useState("");
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
+  const name = user.displayName;
+  const status = user.statusMessage;
+  const picture = user.pictureUrl;
+
   const [result, setResult] = useState("");
 
   useEffect(() => {
@@ -14,23 +25,25 @@ function Profile() {
       liff.init({ liffId: LIFF_ID }).then(async () => {
         if (liff.isLoggedIn()) {
           liff.getProfile().then((profile) => {
-            setName(profile.displayName);
-            setStatus(profile.statusMessage);
-            setPictureUrl(profile.pictureUrl);
+            dispatch(setUserId(profile.userId));
+            dispatch(setDisplayName(profile.displayName));
+            dispatch(setStatusMessage(profile.statusMessage));
+            dispatch(setPictureUrl(profile.pictureUrl));
           });
         } else {
           liff.login().then(
             liff.getProfile().then((profile) => {
-              setName(profile.displayName);
-              setStatus(profile.statusMessage);
-              setPictureUrl(profile.pictureUrl);
+              dispatch(setUserId(profile.userId));
+              dispatch(setDisplayName(profile.displayName));
+              dispatch(setStatusMessage(profile.statusMessage));
+              dispatch(setPictureUrl(profile.pictureUrl));
             })
           );
         }
       });
     }
     initialLIFF();
-  }, []);
+  }, [dispatch]);
 
   const scanQr = () => {
     liff.scanCodeV2().then((result) => {
@@ -44,19 +57,19 @@ function Profile() {
       align="center"
     >
       <Card style={{ width: "20rem" }}>
-        <Card.Img variant="top" src={pictureUrl} />
+        <Card.Img variant="top" src={picture} />
         <Card.Body>
           <Card.Title>{name}</Card.Title>
           <Card.Text>{status}</Card.Text>
         </Card.Body>
       </Card>
       <div class="mt-3">
-        <Button variant="primary" onClick={scanQr}>
+        <Button variant="info" onClick={scanQr}>
           SCAN QR
         </Button>{" "}
       </div>
       <div class="mt-3">
-        <a href={result} target="_blank">
+        <a href={result} target="_blank" rel="noreferrer">
           {result}
         </a>
       </div>
