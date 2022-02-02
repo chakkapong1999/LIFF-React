@@ -1,71 +1,66 @@
-import React, { Component } from "react";
-// import initialLIFF from "../services/InitLineLiff";
+import React, { useState, useEffect } from "react";
 import liff from "@line/liff";
 import { Button, Card } from "react-bootstrap";
 const LIFF_ID = "1656852806-GeOAABVl";
 
-class Profile extends Component {
-  constructor(props) {
-    super(props);
+function Profile() {
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState("");
+  const [pictureUrl, setPictureUrl] = useState("");
+  const [result, setResult] = useState("");
 
-    this.state = {
-      name: "",
-      status: "",
-      pictureUrl: "",
-      result: "",
-    };
-  }
-
-  componentDidMount() {
-    // initialLIFF();
-    liff
-      .init({ liffId: LIFF_ID })
-      .then(async () => {
+  useEffect(() => {
+    function initialLIFF() {
+      liff.init({ liffId: LIFF_ID }).then(async () => {
         if (liff.isLoggedIn()) {
           liff.getProfile().then((profile) => {
-            this.setState({ name: profile.displayName });
-            this.setState({ status: profile.statusMessage });
-            this.setState({ pictureUrl: profile.pictureUrl });
+            setName(profile.displayName);
+            setStatus(profile.statusMessage);
+            setPictureUrl(profile.pictureUrl);
           });
         } else {
-          liff.login();
+          liff.login().then(
+            liff.getProfile().then((profile) => {
+              setName(profile.displayName);
+              setStatus(profile.statusMessage);
+              setPictureUrl(profile.pictureUrl);
+            })
+          );
         }
-      })
-      .catch((err) => {
-        console.log(err);
       });
-  }
+    }
+    initialLIFF();
+  }, []);
 
-  scanQr = () => {
-    liff.scanCodeV2().then((value) => {
-      this.setState({ result: value.value });
-      console.log(this.state.result);
+  const scanQr = () => {
+    liff.scanCodeV2().then((result) => {
+      setResult(result.value);
     });
   };
 
-  render() {
-    return (
-      <div
-        class="w-50 p-3 mx-auto mt-5 border border-dark rounded"
-        align="center"
-      >
-        <Card style={{ width: "20rem" }}>
-          <Card.Img variant="top" src={this.state.pictureUrl} />
-          <Card.Body>
-            <Card.Title>{this.state.name}</Card.Title>
-            <Card.Text>{this.state.status}</Card.Text>
-          </Card.Body>
-        </Card>
-        <div class="mt-3">
-          <Button variant="primary" onClick={this.scanQr}>
-            SCAN QR
-          </Button>{" "}
-        </div>
-        <div class="mt-3">
-          <a href={this.state.result} target="_blank">{this.state.result}</a>
-        </div>
+  return (
+    <div
+      class="w-50 p-3 mx-auto mt-5 border border-dark rounded"
+      align="center"
+    >
+      <Card style={{ width: "20rem" }}>
+        <Card.Img variant="top" src={pictureUrl} />
+        <Card.Body>
+          <Card.Title>{name}</Card.Title>
+          <Card.Text>{status}</Card.Text>
+        </Card.Body>
+      </Card>
+      <div class="mt-3">
+        <Button variant="primary" onClick={scanQr}>
+          SCAN QR
+        </Button>{" "}
       </div>
-    );
-  }
+      <div class="mt-3">
+        <a href={result} target="_blank">
+          {result}
+        </a>
+      </div>
+    </div>
+  );
 }
 export default Profile;
