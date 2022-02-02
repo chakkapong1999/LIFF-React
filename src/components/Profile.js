@@ -51,6 +51,18 @@ function Profile() {
     });
   };
 
+  const sendMessage = async () => {
+    const message = [
+      {
+        type: "text",
+        text: "Hello!",
+      },
+    ];
+    if (liff.getContext().type !== "none") {
+      await liff.sendMessages(message);
+    }
+  };
+
   return (
     <div
       class="w-50 p-3 mx-auto mt-5 border border-dark rounded"
@@ -76,6 +88,9 @@ function Profile() {
             {result}
           </a>
         </div>
+        <Button variant="info" onClick={sendMessage}>
+          Send Message
+        </Button>{" "}
       </Container>
     </div>
   );
