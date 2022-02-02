@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import liff from "@line/liff";
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Container } from "react-bootstrap";
 import {
   setUserId,
   setDisplayName,
@@ -56,23 +56,27 @@ function Profile() {
       class="w-50 p-3 mx-auto mt-5 border border-dark rounded"
       align="center"
     >
-      <Card style={{ width: "20rem" }}>
-        <Card.Img variant="top" src={picture} />
-        <Card.Body>
-          <Card.Title>{name}</Card.Title>
-          <Card.Text>{status}</Card.Text>
-        </Card.Body>
-      </Card>
-      <div class="mt-3">
-        <Button variant="info" onClick={scanQr}>
-          SCAN QR
-        </Button>{" "}
-      </div>
-      <div class="mt-3">
-        <a href={result} target="_blank" rel="noreferrer">
-          {result}
-        </a>
-      </div>
+      <Container>
+        <Card>
+          <Card.Img variant="top" src={picture} />
+          <Card.Body>
+            <Card.Title>{name}</Card.Title>
+            <Card.Text>{status}</Card.Text>
+          </Card.Body>
+        </Card>
+      </Container>
+      <Container>
+        <div class="mt-3">
+          <Button variant="info" onClick={scanQr}>
+            SCAN QR
+          </Button>{" "}
+        </div>
+        <div class="mt-3">
+          <a href={result} target="_blank" rel="noreferrer">
+            {result}
+          </a>
+        </div>
+      </Container>
     </div>
   );
 }
