@@ -10,7 +10,7 @@ const initialState = {
 export const userSlice = createSlice({
     name: 'lineProfile',
     initialState,
-    reducers: {
+    reducers: { //จัดการ state ตาม action ที่เกิดขึ้น
         setUserId: (state, action) => {
             state.userId = action.payload
         },
