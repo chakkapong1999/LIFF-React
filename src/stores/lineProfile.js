@@ -7,7 +7,7 @@ const initialState = {
     pictureUrl: ''
 };
 
-export const userSlice = createSlice({
+const userSlice = createSlice({
     name: 'lineProfile',
     initialState,
     reducers: { //จัดการ state ตาม action ที่เกิดขึ้น
