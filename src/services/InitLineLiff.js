@@ -1,4 +1,5 @@
 import liff from "@line/liff";
+import { store } from "./stores/index";
 
 const LIFF_ID = "1656852806-GeOAABVl";
 export default function initialLIFF() {

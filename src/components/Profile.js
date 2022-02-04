@@ -24,26 +24,41 @@ function Profile() {
     function initialLIFF() {
       liff.init({ liffId: LIFF_ID }).then(async () => {
         if (liff.isLoggedIn()) {
-          liff.getProfile().then((profile) => {
-            dispatch(setUserId(profile.userId));
-            dispatch(setDisplayName(profile.displayName));
-            dispatch(setStatusMessage(profile.statusMessage));
-            dispatch(setPictureUrl(profile.pictureUrl));
+          liff.getFriendship().then(async (result) => {
+            if (result.friendFlag) {
+              getProfile();
+            } else {
+              liff.openWindow({
+                url: "https://line.me/R/ti/p/@631dlctz",
+              });
+            }
           });
         } else {
           liff.login().then(
-            liff.getProfile().then((profile) => {
-              dispatch(setUserId(profile.userId));
-              dispatch(setDisplayName(profile.displayName));
-              dispatch(setStatusMessage(profile.statusMessage));
-              dispatch(setPictureUrl(profile.pictureUrl));
+            liff.getFriendship().then(async (result) => {
+              if (result.friendFlag) {
+                getProfile();
+              } else {
+                liff.openWindow({
+                  url: "https://line.me/R/ti/p/@631dlctz",
+                });
+              }
             })
           );
         }
       });
     }
     initialLIFF();
-  }, [dispatch]);
+  }, []);
+
+  const getProfile = () => {
+    liff.getProfile().then((profile) => {
+      dispatch(setUserId(profile.userId));
+      dispatch(setDisplayName(profile.displayName));
+      dispatch(setStatusMessage(profile.statusMessage));
+      dispatch(setPictureUrl(profile.pictureUrl));
+    });
+  };
 
   const scanQr = () => {
     liff.scanCodeV2().then((result) => {
