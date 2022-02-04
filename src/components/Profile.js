@@ -73,7 +73,7 @@ function Profile() {
         text: "Hello!",
       },
     ];
-    if (liff.getContext().type !== "none") {
+    if (liff.getContext().type === "room") {
       await liff.sendMessages(message);
     }
   };
