@@ -21,9 +21,23 @@ function Profile() {
   const [result, setResult] = useState("");
 
   useEffect(() => {
-    function initialLIFF() {
-      liff.init({ liffId: LIFF_ID }).then(async () => {
-        if (liff.isLoggedIn()) {
+    initialLIFF();
+  }, []);
+
+  function initialLIFF() {
+    liff.init({ liffId: LIFF_ID }).then(async () => {
+      if (liff.isLoggedIn()) {
+        liff.getFriendship().then(async (result) => {
+          if (result.friendFlag) {
+            getProfile();
+          } else {
+            liff.openWindow({
+              url: "https://line.me/R/ti/p/@631dlctz",
+            });
+          }
+        });
+      } else {
+        liff.login().then(
           liff.getFriendship().then(async (result) => {
             if (result.friendFlag) {
               getProfile();
@@ -32,24 +46,11 @@ function Profile() {
                 url: "https://line.me/R/ti/p/@631dlctz",
               });
             }
-          });
-        } else {
-          liff.login().then(
-            liff.getFriendship().then(async (result) => {
-              if (result.friendFlag) {
-                getProfile();
-              } else {
-                liff.openWindow({
-                  url: "https://line.me/R/ti/p/@631dlctz",
-                });
-              }
-            })
-          );
-        }
-      });
-    }
-    initialLIFF();
-  }, []);
+          })
+        );
+      }
+    });
+  }
 
   const getProfile = () => {
     liff.getProfile().then((profile) => {
@@ -73,7 +74,10 @@ function Profile() {
         text: "Hello!",
       },
     ];
-    if (liff.getContext().type === "utou" || liff.getContext().type === "room") {
+    if (
+      liff.getContext().type === "utou" ||
+      liff.getContext().type === "room"
+    ) {
       await liff.sendMessages(message);
     }
   };

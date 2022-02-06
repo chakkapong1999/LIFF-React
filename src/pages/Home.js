@@ -1,6 +1,12 @@
-import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import Profile from "../components/Profile";
+import Navigation from "../components/Navigation";
 
 export default function Home() {
-  return <div>Home</div>;
+  return (
+    <div>
+      <Navigation/>
+      <Profile />
+    </div>
+  );
 }
